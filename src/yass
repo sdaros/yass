@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -o pipefail
+
+cmd_version() {
+	cat <<- _EOF
+	---
+	yass:
+	  version: 0.0.1
+	  author: Stefano Da Ros
+	...
+	_EOF
+}
+
+cmd_usage() {
+	cmd_version
+  	echo
+  	cat <<- _EOF
+	Usage:
+	  $PROGRAM version
+	     Show version information.
+	  $PROGRAM help
+             Show this help text.
+
+	_EOF
+}
+
+PROGRAM="${0##*/}"
+COMMAND="$1"
+
+case "$1" in
+	version|--version) shift;    cmd_version "$@" ;;
+	help|--help) shift;          cmd_usage "$@" ;;
+	*) COMMAND="help";           cmd_usage "$@" ;;
+esac
+exit 0

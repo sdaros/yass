@@ -1,0 +1,3 @@
+http://schema.org/name,http://schema.org/description,http://www.w3.org/2001/XMLSchema#dateTime,http://schema.org/url
+EditorConfig,EditorConfig helps developers define and maintain consistent coding styles between different editors and IDEs.,2016-12-15T13:28:51+01:00,http://editorconfig.org
+read haskell like python,blog post,2016-12-15T13:29:32+01:00,http://blog.ezyang.com/2011/11/how-to-read-haskell

@@ -1,15 +1,26 @@
 #!/usr/bin/env bash
 
+# NEXT:
+#
+# - using symlink to detect non-trivial view
+# - create stage_www
+
 set -o pipefail
+
+PROGRAM="${0##*/}"
+COMMAND="$1"
+export APP_DIR="${MY_APP_DIR:-$(pwd)}"
+export APP_NAME="${MY_APP_NAME:-app}"
 
 cmd_version() {
 	cat <<- _EOF
 	---
-	yass:
-	  version: 0.0.1
+	$PROGRAM:
+	  version: 0.1.0
 	  author: Stefano Da Ros
 	...
 	_EOF
+	echo $APP_DIR
 }
 
 cmd_usage() {
@@ -21,16 +32,99 @@ cmd_usage() {
 	     Show version information.
 	  $PROGRAM help
              Show this help text.
+	  $PROGRAM init
+	     Initialise the default directory structure for our app
+	  $PROGRAM edit
+	     Add, edit or delete entries in our app's model.
+	  $PROGRAM morph
+	     Upgrade your app to handle more complex use cases.
 
 	_EOF
 }
 
-PROGRAM="${0##*/}"
-COMMAND="$1"
+##
+# BEGIN Helper Functions
+##
+
+init_stage() {
+    mkdir "$1" && \
+    # create directory that holds our views
+    mkdir -p "$1"/viewAs
+    # create model
+    touch "$1"/model.yaml
+}
+
+set_current() {
+    ln -snf "$1" current
+}
+
+create_stage_text() {
+    init_stage "$1"
+    # symlink view to model
+    ln -sf "../model.yaml" "$1"/viewAs/"$APP_NAME".yaml && \
+    # update default view
+    ln -sf viewAs/"$APP_NAME".yaml "$1"/default
+}
+
+create_stage_text_with_view() {
+    init_stage "$1"
+    # create view as empty file
+    touch "$1"/viewAs/"$APP_NAME".yaml
+    # update default view
+    ln -sf viewAs/"$APP_NAME".yaml "$1"/default
+}
+
+create_stage_www() {
+    init_stage "$1"
+    # create persistence layer (sqlite3)
+    touch "$1"/"$APP_NAME".sqlite3
+    # create web-component view (using `vue.js`)
+    mkdir -p "$1"/viewAs/web-component/vue
+    touch "$1"/viewAs/web-component/vue/"$APP_NAME".vue
+    # create html view
+    touch "$1"/viewAs/"$APP_NAME".html
+    # update default view
+    ln -sf viewAs/"$APP_NAME".html "$1"/default
+}
+
+create_stage() {
+    case "$1" in
+      text)             create_stage_text "$@" ;;
+      text-with-view)   create_stage_text_with_view "$@" ;;
+      www)              create_stage_www "$@" ;;
+    esac
+}
+
+
+##
+# END Helper Functions
+##
+
+cmd_init() {
+  local dir="$APP_DIR/$APP_NAME"
+  mkdir -p "$dir" && cd "$dir"
+  create_stage "$1" && cd "$dir"
+  set_current "$1" && cd "$dir"
+}
+
+
+cmd_edit() {
+  # Use default view if not specified.
+  local view="$APP_DIR"/"$APP_NAME"/current/default
+  ${EDITOR:-vi} "$view"
+}
+
+cmd_morph() {
+  echo "$@"
+}
+
 
 case "$1" in
 	version|--version) shift;    cmd_version "$@" ;;
 	help|--help) shift;          cmd_usage "$@" ;;
+	init) shift;                 cmd_init "$@" ;;
+	edit) shift;                 cmd_edit "$@" ;;
+	morph) shift;                cmd_morph "$@" ;;
 	*) COMMAND="help";           cmd_usage "$@" ;;
 esac
 exit 0

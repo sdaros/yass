@@ -49,7 +49,7 @@ cmd_usage() {
 init_stage() {
     mkdir "$1" && \
     # create directory that holds our views
-    mkdir -p "$1"/viewAs
+    mkdir -p "$1"/view-as
     # create model
     touch "$1"/model.yaml
 }
@@ -61,17 +61,17 @@ set_current() {
 create_stage_text() {
     init_stage "$1"
     # symlink view to model
-    ln -sf "../model.yaml" "$1"/viewAs/"$APP_NAME".yaml && \
+    ln -sf "../model.yaml" "$1"/view-as/"$APP_NAME".yaml && \
     # update default view
-    ln -sf viewAs/"$APP_NAME".yaml "$1"/default
+    ln -sf view-as/"$APP_NAME".yaml "$1"/default
 }
 
 create_stage_text_with_view() {
     init_stage "$1"
     # create view as empty file
-    touch "$1"/viewAs/"$APP_NAME".yaml
+    touch "$1"/view-as/"$APP_NAME".yaml
     # update default view
-    ln -sf viewAs/"$APP_NAME".yaml "$1"/default
+    ln -sf view-as/"$APP_NAME".yaml "$1"/default
 }
 
 create_stage_www() {
@@ -79,12 +79,12 @@ create_stage_www() {
     # create persistence layer (sqlite3)
     touch "$1"/"$APP_NAME".sqlite3
     # create web-component view (using `vue.js`)
-    mkdir -p "$1"/viewAs/web-component/vue
-    touch "$1"/viewAs/web-component/vue/"$APP_NAME".vue
+    mkdir -p "$1"/view-as/web-component/vue
+    touch "$1"/view-as/web-component/vue/"$APP_NAME".vue
     # create html view
-    touch "$1"/viewAs/"$APP_NAME".html
+    touch "$1"/view-as/"$APP_NAME".html
     # update default view
-    ln -sf viewAs/"$APP_NAME".html "$1"/default
+    ln -sf view-as/"$APP_NAME".html "$1"/default
 }
 
 create_stage() {

@@ -1,2 +1,2 @@
 # yass
-Yet Another SpreadSheet
+Yet Another Software Solution

@@ -51,7 +51,7 @@ init_stage() {
     # create directory that holds our views
     mkdir -p "$1"/view-as
     # create model
-    touch "$1"/model.yaml
+    touch "$1"/data.yaml
 }
 
 set_current() {
@@ -61,15 +61,7 @@ set_current() {
 create_stage_text() {
     init_stage "$1"
     # symlink view to model
-    ln -sf "../model.yaml" "$1"/view-as/"$APP_NAME".yaml && \
-    # update default view
-    ln -sf view-as/"$APP_NAME".yaml "$1"/default
-}
-
-create_stage_text_with_view() {
-    init_stage "$1"
-    # create view as empty file
-    touch "$1"/view-as/"$APP_NAME".yaml
+    ln -sf "../data.yaml" "$1"/view-as/"$APP_NAME".yaml && \
     # update default view
     ln -sf view-as/"$APP_NAME".yaml "$1"/default
 }
@@ -90,7 +82,6 @@ create_stage_www() {
 create_stage() {
     case "$1" in
       text)             create_stage_text "$@" ;;
-      text-with-view)   create_stage_text_with_view "$@" ;;
       www)              create_stage_www "$@" ;;
     esac
 }

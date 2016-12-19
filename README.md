@@ -8,4 +8,6 @@ We let you execute one simple command, `yass morph app` to transform your spread
 
 ## Getting started
 
+Let's create a simple evernote clone app that we will call "nuggeting".
+
 TODO: show screencapture.

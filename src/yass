@@ -33,11 +33,13 @@ cmd_usage() {
 	  $PROGRAM help
              Show this help text.
 	  $PROGRAM init
-	     Initialise the default directory structure for our app
+	     Initialise the default directory structure for your app
 	  $PROGRAM edit
-	     Add, edit or delete entries in our app's model.
+	     Add, edit or delete entries from your app.
 	  $PROGRAM morph
 	     Upgrade your app to handle more complex use cases.
+	  $PROGRAM commit
+	     Synchronise latest offline edits.
 
 	_EOF
 }
@@ -105,6 +107,12 @@ cmd_edit() {
   ${EDITOR:-vi} "$view"
 }
 
+cmd_commit() {
+  local view="$APP_DIR"/"$APP_NAME"/current/default
+  # > cat $view | 
+
+}
+
 cmd_morph() {
   echo "$@"
 }
@@ -116,6 +124,7 @@ case "$1" in
 	init) shift;                 cmd_init "$@" ;;
 	edit) shift;                 cmd_edit "$@" ;;
 	morph) shift;                cmd_morph "$@" ;;
+	commit) shift;               cmd_commit "$@" ;;
 	*) COMMAND="help";           cmd_usage "$@" ;;
 esac
 exit 0

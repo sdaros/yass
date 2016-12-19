@@ -1,0 +1,23 @@
+# Basic meta information like version, app name, etc.
+meta:
+  version:
+    0.1.0
+  name:
+    nuggeting
+  description:
+    A simple evernote clone
+  author:
+    Stefano Da Ros <sdaros@cip.li>
+  license:
+    MIT
+
+# Information relevant to deployment
+deployment:
+  stage:
+    - text:
+        persistence:
+          - file: "./foobar.ttl"
+    - www:
+        persistence:
+          - db:
+            - sqlite3: "./data.sqlite3"
